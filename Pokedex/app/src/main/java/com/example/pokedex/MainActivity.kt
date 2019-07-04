@@ -2,7 +2,6 @@ package com.example.pokedex
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,7 +13,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,15 +52,19 @@ class MainActivity : AppCompatActivity() {
 
             imageBase64 = encodedImage
 
-            sendImage(imageBase64)
+            var pokeFoto: PokeFoto = PokeFoto()
+
+            pokeFoto.image = imageBase64
+
+            sendImage(pokeFoto)
 
         }
     }
 
 
 
-    private fun sendImage(base64img: String) {
-        var call = RetrofitInitializer().pokeService().sendImage(base64img)
+    private fun sendImage(pokeFoto: PokeFoto) {
+        var call = RetrofitInitializer().pokeService().sendImage(pokeFoto)
         call.enqueue(object: Callback<PokeResult> {
             override fun onFailure(call: Call<PokeResult>, t: Throwable) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -70,6 +72,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<PokeResult>, response: Response<PokeResult>) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                textView2.setText(response.body()?.pokemon)
+
             }
 
         })
